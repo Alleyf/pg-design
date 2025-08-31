@@ -4,6 +4,22 @@
 
 ![PhotoDesign Preview](https://via.placeholder.com/800x400/1f2937/ffffff?text=PhotoDesign+Preview)
 
+## 📚 目录
+
+- [✨ 核心功能](#-核心功能)
+- [🛠️ 技术栈](#️-技术栈)
+- [🚀 快速开始](#-快速开始)
+- [🚀 项目部署](#-项目部署) ⭐
+- [📁 项目结构](#-项目结构)
+- [🎨 功能特色](#-功能特色)
+- [🔧 开发指南](#-开发指南)
+- [🎯 使用场景](#-使用场景)
+- [🔮 未来规划](#-未来规划)
+- [🤝 贡献指南](#-贡献指南)
+- [📄 许可证](#-许可证)
+- [💖 支持项目](#-支持项目)
+- [📞 联系方式](#-联系方式)
+
 ## ✨ 核心功能
 
 ### 🎯 项目管理
@@ -103,6 +119,327 @@ npm run preview
 npm run lint
 ```
 
+## 🚀 项目部署
+
+### 构建生产版本
+
+在部署之前，首先构建生产版本：
+
+```bash
+# 构建项目
+npm run build
+
+# 本地预览构建结果
+npm run preview
+```
+
+构建完成后，会在 `dist/` 目录生成以下文件：
+- `index.html` - 主页面文件
+- `assets/` - 包含 CSS 和 JavaScript 文件
+
+### 部署方案
+
+#### 1. 🌟 Vercel 部署（推荐）
+
+**特点**：免费、自动 HTTPS、全球 CDN、Git 集成、零配置
+
+```bash
+# 安装 Vercel CLI
+npm install -g vercel
+
+# 登录并部署
+vercel
+
+# 生产环境部署
+vercel --prod
+```
+
+**自动部署**：连接 GitHub 仓库后，每次推送代码会自动触发部署。
+
+**配置文件** `vercel.json`（可选）：
+```json
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+```
+
+#### 2. 🚀 Netlify 部署
+
+**特点**：免费、表单处理、分支预览、函数支持
+
+```bash
+# 安装 Netlify CLI
+npm install -g netlify-cli
+
+# 登录
+netlify login
+
+# 初始化并部署
+netlify init
+netlify deploy --prod --dir=dist
+```
+
+**拖拽部署**：直接将 `dist` 文件夹拖拽到 Netlify 网站上。
+
+**配置文件** `netlify.toml`：
+```toml
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+#### 3. 🐙 GitHub Pages 部署
+
+**方案一：GitHub Actions 自动部署**
+
+创建 `.github/workflows/deploy.yml`：
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
+```
+
+**方案二：手动部署**
+```bash
+# 构建项目
+npm run build
+
+# 使用 gh-pages 包部署
+npm install -g gh-pages
+gh-pages -d dist
+```
+
+#### 4. 🐳 Docker 部署
+
+**Dockerfile**：
+```dockerfile
+# 构建阶段
+FROM node:18-alpine as build
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+# 生产阶段
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+**nginx.conf**：
+```nginx
+server {
+    listen 80;
+    server_name localhost;
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # 静态资源缓存
+    location /assets/ {
+        root /usr/share/nginx/html;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Gzip 压缩
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/javascript
+        application/xml+rss
+        application/json;
+}
+```
+
+**构建和运行**：
+```bash
+# 构建镜像
+docker build -t photodesign .
+
+# 运行容器
+docker run -p 3000:80 photodesign
+```
+
+#### 5. 📦 传统服务器部署
+
+**Apache 配置** `.htaccess`：
+```apache
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+```
+
+**Nginx 配置**：
+```nginx
+location / {
+    try_files $uri $uri/ /index.html;
+}
+```
+
+### 部署流程图
+
+```mermaid
+graph TD
+    A[开始部署] --> B[项目构建]
+    B --> C{构建成功?}
+    C -->|是| D[检查构建产物]
+    C -->|否| E[修复构建问题]
+    E --> B
+    D --> F[选择部署方案]
+    F --> G[Vercel部署]
+    F --> H[Netlify部署]
+    F --> I[GitHub Pages部署]
+    F --> J[Docker部署]
+    F --> K[传统服务器部署]
+    G --> L[部署验证]
+    H --> L
+    I --> L
+    J --> L
+    K --> L
+    L --> M{验证通过?}
+    M -->|是| N[部署完成]
+    M -->|否| O[问题排查]
+    O --> F
+    N --> P[配置域名和SSL]
+    P --> Q[性能优化]
+    Q --> R[监控设置]
+```
+
+### 部署检查清单
+
+#### ✅ 部署前检查
+- [ ] 代码已提交到仓库
+- [ ] 构建命令正常执行
+- [ ] 本地预览测试通过
+- [ ] 环境变量已配置
+- [ ] 依赖版本兼容性确认
+
+#### ✅ 部署后验证
+- [ ] 网站可以正常访问
+- [ ] 所有页面路由正常
+- [ ] 静态资源加载正常
+- [ ] 响应式布局正常
+- [ ] 浏览器兼容性测试
+- [ ] 本地存储功能正常
+
+### 常见问题解决
+
+#### 1. 路由 404 问题
+确保服务器配置了 SPA 路由重写规则，将所有路由请求重定向到 `index.html`。
+
+#### 2. 静态资源 404
+检查 `vite.config.ts` 中的 `base` 配置是否正确：
+```typescript
+export default defineConfig({
+  base: '/your-repo-name/', // GitHub Pages 需要设置仓库名
+  // 其他配置...
+})
+```
+
+#### 3. 本地存储数据丢失
+项目使用浏览器 localStorage，数据存储在用户本地，不会因部署而丢失。
+
+#### 4. 构建内存不足
+在构建环境中增加内存限制：
+```bash
+NODE_OPTIONS="--max-old-space-size=4096" npm run build
+```
+
+### 性能优化建议
+
+#### 1. 构建优化
+- ✅ 代码分割（Vite 自动处理）
+- ✅ 资源压缩（构建时自动压缩）
+- ✅ Tree Shaking（移除未使用代码）
+
+#### 2. 部署优化
+- 🔧 启用 Gzip/Brotli 压缩
+- 🔧 配置静态资源缓存
+- 🔧 使用 CDN 加速
+- 🔧 启用 HTTP/2
+
+#### 3. 运行时优化
+- 📱 响应式图片加载
+- ⚡ 懒加载组件
+- 💾 合理使用本地存储
+- 🔄 组件性能优化
+
+### 快速部署命令
+
+```bash
+# Vercel 一键部署
+npm install -g vercel && vercel --prod
+
+# Netlify 一键部署
+npm install -g netlify-cli && netlify deploy --prod --dir=dist
+
+# GitHub Pages 部署
+npm install -g gh-pages && npm run build && gh-pages -d dist
+```
+
+---
+
 ## 📁 项目结构
 
 ```
@@ -135,6 +472,8 @@ PhotoDesign/
 ├── vite.config.ts           # Vite 配置
 └── package.json             # 项目依赖和脚本
 ```
+
+> 💡 **快速部署**：查看 [项目部署](#🚀-项目部署) 章节了解多种部署方案
 
 ## 🎨 功能特色
 
@@ -204,8 +543,8 @@ PhotoDesign/
 ## 🔮 未来规划
 
 ### 短期目标
-- [ ] 数据持久化（本地存储）
-- [ ] 项目导入/导出功能
+- [x] 数据持久化（本地存储）✅
+- [x] 项目导入/导出功能 ✅
 - [ ] 更多项目模板
 - [ ] 移动端适配优化
 
