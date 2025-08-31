@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:local": "vite build --mode development",
+    "build:github": "vite build --mode github-pages",
     "lint": "eslint .",
     "preview": "vite preview",
     "preview:local": "npm run build:local && vite preview"
