@@ -2,7 +2,19 @@
 
 一个专业的摄影设计项目管理平台，为摄影师、设计师和创意团队提供项目管理、预算控制、团队协作和灵感收集的一站式解决方案。
 
+<div align="center">
+
 ![PhotoDesign Preview](https://via.placeholder.com/800x400/1f2937/ffffff?text=PhotoDesign+Preview)
+
+### 🚀 快速部署
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F%3Cusername%3E%2FPhotoDesign&project-name=photodesign&repository-name=PhotoDesign)
+&nbsp;&nbsp;
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/%3Cusername%3E/PhotoDesign)
+
+*点击上面按钮一键部署到云端（需将链接中的 `%3Cusername%3E` 替换为您的 GitHub 用户名）*
+
+</div>
 
 ## 📚 目录
 
@@ -143,6 +155,14 @@ npm run preview
 
 **特点**：免费、自动 HTTPS、全球 CDN、Git 集成、零配置
 
+**🚀 一键部署**：
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F%3Cusername%3E%2FPhotoDesign&project-name=photodesign&repository-name=PhotoDesign)
+
+> 💡 **提示**：请将上面链接中的 `%3Cusername%3E` 替换为您的 GitHub 用户名
+
+**手动部署**：
+
 ```bash
 # 安装 Vercel CLI
 npm install -g vercel
@@ -176,6 +196,14 @@ vercel --prod
 #### 2. 🚀 Netlify 部署
 
 **特点**：免费、表单处理、分支预览、函数支持
+
+**🚀 一键部署**：
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/%3Cusername%3E/PhotoDesign)
+
+> 💡 **提示**：请将上面链接中的 `%3Cusername%3E` 替换为您的 GitHub 用户名
+
+**手动部署**：
 
 ```bash
 # 安装 Netlify CLI
@@ -427,16 +455,15 @@ NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 ### 快速部署命令
 
-```bash
-# Vercel 一键部署
-npm install -g vercel && vercel --prod
+**🎆 一键部署按钮**：
 
-# Netlify 一键部署
-npm install -g netlify-cli && netlify deploy --prod --dir=dist
+| 平台 | 一键部署 | 手动部署 |
+|------|---------|----------|
+| **Vercel** | [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F%3Cusername%3E%2FPhotoDesign) | `npm install -g vercel && vercel --prod` |
+| **Netlify** | [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/%3Cusername%3E/PhotoDesign) | `npm install -g netlify-cli && netlify deploy --prod --dir=dist` |
+| **GitHub Pages** | — | `npm install -g gh-pages && npm run build && gh-pages -d dist` |
 
-# GitHub Pages 部署
-npm install -g gh-pages && npm run build && gh-pages -d dist
-```
+> 💡 **重要**：请将上面链接中的 `%3Cusername%3E` 替换为您的实际 GitHub 用户名
 
 ---
 
