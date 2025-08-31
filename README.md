@@ -241,13 +241,6 @@ PhotoDesign/
 
 本项目采用 [MIT 许可证](LICENSE)。详情请查看 [LICENSE](LICENSE) 文件。
 
-### MIT 许可证要点
-- ✅ 允许商业使用
-- ✅ 允许修改和分发
-- ✅ 允许私人使用
-- ✅ 允许专利使用
-- ⚠️ 必须包含许可证和版权声明
-- ❌ 不提供任何担保
 
 ## 💖 支持项目
 
@@ -262,10 +255,11 @@ PhotoDesign/
 
 **如果你觉得这个项目有用，可以请开发者喝杯咖啡 ☕**
 
-| 微信打赏 | 支付宝打赏 | 爱发电 |
-|---------|-----------|--------|
-| <img src="./assets/wechat-donate.png" alt="微信打赏" width="200"/> | <img src="./assets/alipay-donate.png" alt="支付宝打赏" width="200"/> | <img src="./assets/afdian-qr.png" alt="爱发电" width="200"/> |
-| 微信扫码打赏 | 支付宝扫码打赏 | [点击支持](https://afdian.net/a/photodesign) |
+
+
+ <img src="./assets/donate-qr.png" alt="赞赏码" width="200"/> 
+
+
 
 
 </div>
