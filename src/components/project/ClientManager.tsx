@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Building, Mail, Phone, Calendar, FileText, Edit3, Save } from 'lucide-react';
+import { User, Building, Mail, Phone, Calendar, FileText, Edit3, Save, X } from 'lucide-react';
 import { Project, ClientInfo } from '../../types/project';
 
 interface ClientManagerProps {

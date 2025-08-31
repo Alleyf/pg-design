@@ -4,6 +4,7 @@ import { ProjectDetail } from './components/ProjectDetail';
 import { Header } from './components/Header';
 import { CreateProjectModal } from './components/CreateProjectModal';
 import { Project } from './types/project';
+import { useLocalStorage } from './hooks/useLocalStorage';
 
 function App() {
   // 示例项目数据
@@ -69,9 +70,13 @@ function App() {
     }
   ];
 
-  const [projects, setProjects] = useState<Project[]>(sampleProjects);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  // 使用本地存储管理项目数据
+  const [projects, setProjects] = useLocalStorage<Project[]>('photodesign_projects', sampleProjects);
+  const [selectedProjectId, setSelectedProjectId] = useLocalStorage<string | null>('photodesign_selected_project', null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  // 根据 ID 查找选中的项目
+  const selectedProject = selectedProjectId ? projects.find(p => p.id === selectedProjectId) || null : null;
 
   const handleCreateProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => {
     const newProject: Project = {
@@ -81,7 +86,7 @@ function App() {
       updatedAt: new Date(),
     };
     setProjects(prev => [newProject, ...prev]);
-    setSelectedProject(newProject);
+    setSelectedProjectId(newProject.id);
     setIsCreateModalOpen(false);
   };
 
@@ -91,21 +96,28 @@ function App() {
         ? { ...updatedProject, updatedAt: new Date() }
         : p
     ));
-    setSelectedProject({ ...updatedProject, updatedAt: new Date() });
+    // 无需更新 selectedProject，因为它会自动从 projects 中查找
   };
 
   const handleDeleteProject = (projectId: string) => {
     setProjects(prev => prev.filter(p => p.id !== projectId));
     if (selectedProject?.id === projectId) {
-      setSelectedProject(null);
+      setSelectedProjectId(null);
     }
+  };
+
+  // 处理数据变更（导入/清空后需要重新加载数据）
+  const handleDataChanged = () => {
+    // 强制重新加载页面以确保数据同步
+    window.location.reload();
   };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Header 
         onCreateProject={() => setIsCreateModalOpen(true)}
-        onBackToProjects={selectedProject ? () => setSelectedProject(null) : undefined}
+        onBackToProjects={selectedProject ? () => setSelectedProjectId(null) : undefined}
+        onDataChanged={handleDataChanged}
       />
       
       <main className="container mx-auto px-4 py-8">
@@ -118,7 +130,7 @@ function App() {
         ) : (
           <ProjectList 
             projects={projects}
-            onSelectProject={setSelectedProject}
+            onSelectProject={(project) => setSelectedProjectId(project.id)}
             onCreateProject={() => setIsCreateModalOpen(true)}
           />
         )}
