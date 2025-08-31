@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Plus, ArrowLeft } from 'lucide-react';
+import { Plus, ArrowLeft } from 'lucide-react';
 import { DataManager } from './DataManager';
 
 interface HeaderProps {
@@ -25,7 +25,11 @@ export function Header({ onCreateProject, onBackToProjects, onDataChanged }: Hea
             )}
             <div className="flex items-center space-x-3">
               <div className="bg-amber-500 p-2 rounded-lg">
-                <Camera className="w-6 h-6 text-gray-900" />
+                <img 
+                  src="/icon.png" 
+                  alt="PG Design Logo" 
+                  className="w-6 h-6 object-contain"
+                />
               </div>
               <div>
                 <h1 className="text-xl font-bold">PG Design</h1>
