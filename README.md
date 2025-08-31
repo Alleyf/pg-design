@@ -159,7 +159,7 @@ npm run preview
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAlleyf%2Fpg-design&project-name=pg-design&repository-name=pg-design)
 
-> 💡 **提示**：请将上面链接中的 `Alleyf` 替换为您的 GitHub 用户名
+
 
 **手动部署**：
 
@@ -201,7 +201,6 @@ vercel --prod
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Alleyf/pg-design)
 
-> 💡 **提示**：请将上面链接中的 `Alleyf` 替换为您的 GitHub 用户名
 
 **手动部署**：
 
@@ -463,14 +462,14 @@ NODE_OPTIONS="--max-old-space-size=4096" npm run build
 | **Netlify** | [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Alleyf/pg-design) | `npm install -g netlify-cli && netlify deploy --prod --dir=dist` |
 | **GitHub Pages** | — | `npm install -g gh-pages && npm run build && gh-pages -d dist` |
 
-> 💡 **重要**：请将上面链接中的 `Alleyf` 替换为您的实际 GitHub 用户名
+
 
 ---
 
 ## 📁 项目结构
 
 ```
-pg-design/
+PhotoDesign/
 ├── src/
 │   ├── components/           # React 组件
 │   │   ├── project/         # 项目相关组件
@@ -651,7 +650,7 @@ pg-design/
 
 **⭐ 如果这个项目对你有帮助，请给我们一个 Star！**
 
-**Made with ❤️ by PG Design Team**
+**Made with ❤️ by PhotoDesign Team**
 
 *让每一次拍摄都充满创意与专业* 📸
 
