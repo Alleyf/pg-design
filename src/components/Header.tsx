@@ -26,7 +26,7 @@ export function Header({ onCreateProject, onBackToProjects }: HeaderProps) {
                 <Camera className="w-6 h-6 text-gray-900" />
               </div>
               <div>
-                <h1 className="text-xl font-bold">PhotoPlan Pro</h1>
+                <h1 className="text-xl font-bold">PhotoDesign</h1>
                 <p className="text-sm text-gray-400">专业摄影策划工具</p>
               </div>
             </div>
