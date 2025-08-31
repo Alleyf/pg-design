@@ -1,18 +1,18 @@
-# PhotoDesign 📸
+# PG Design 📸
 
 一个专业的摄影设计项目管理平台，为摄影师、设计师和创意团队提供项目管理、预算控制、团队协作和灵感收集的一站式解决方案。
 
 <div align="center">
 
-![PhotoDesign Preview](https://via.placeholder.com/800x400/1f2937/ffffff?text=PhotoDesign+Preview)
+![PG Design Preview](./assets/cover.png)
 
 ### 🚀 快速部署
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F%3Cusername%3E%2FPhotoDesign&project-name=photodesign&repository-name=PhotoDesign)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAlleyf%2Fpg-design&project-name=pg-design&repository-name=pg-design)
 &nbsp;&nbsp;
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/%3Cusername%3E/PhotoDesign)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Alleyf/pg-design)
 
-*点击上面按钮一键部署到云端（需将链接中的 `%3Cusername%3E` 替换为您的 GitHub 用户名）*
+
 
 </div>
 
@@ -157,9 +157,9 @@ npm run preview
 
 **🚀 一键部署**：
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F%3Cusername%3E%2FPhotoDesign&project-name=photodesign&repository-name=PhotoDesign)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAlleyf%2Fpg-design&project-name=pg-design&repository-name=pg-design)
 
-> 💡 **提示**：请将上面链接中的 `%3Cusername%3E` 替换为您的 GitHub 用户名
+> 💡 **提示**：请将上面链接中的 `Alleyf` 替换为您的 GitHub 用户名
 
 **手动部署**：
 
@@ -199,9 +199,9 @@ vercel --prod
 
 **🚀 一键部署**：
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/%3Cusername%3E/PhotoDesign)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Alleyf/pg-design)
 
-> 💡 **提示**：请将上面链接中的 `%3Cusername%3E` 替换为您的 GitHub 用户名
+> 💡 **提示**：请将上面链接中的 `Alleyf` 替换为您的 GitHub 用户名
 
 **手动部署**：
 
@@ -459,18 +459,18 @@ NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 | 平台 | 一键部署 | 手动部署 |
 |------|---------|----------|
-| **Vercel** | [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F%3Cusername%3E%2FPhotoDesign) | `npm install -g vercel && vercel --prod` |
-| **Netlify** | [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/%3Cusername%3E/PhotoDesign) | `npm install -g netlify-cli && netlify deploy --prod --dir=dist` |
+| **Vercel** | [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAlleyf%2Fpg-design) | `npm install -g vercel && vercel --prod` |
+| **Netlify** | [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Alleyf/pg-design) | `npm install -g netlify-cli && netlify deploy --prod --dir=dist` |
 | **GitHub Pages** | — | `npm install -g gh-pages && npm run build && gh-pages -d dist` |
 
-> 💡 **重要**：请将上面链接中的 `%3Cusername%3E` 替换为您的实际 GitHub 用户名
+> 💡 **重要**：请将上面链接中的 `Alleyf` 替换为您的实际 GitHub 用户名
 
 ---
 
 ## 📁 项目结构
 
 ```
-PhotoDesign/
+pg-design/
 ├── src/
 │   ├── components/           # React 组件
 │   │   ├── project/         # 项目相关组件
@@ -651,7 +651,7 @@ PhotoDesign/
 
 **⭐ 如果这个项目对你有帮助，请给我们一个 Star！**
 
-**Made with ❤️ by PhotoDesign Team**
+**Made with ❤️ by PG Design Team**
 
 *让每一次拍摄都充满创意与专业* 📸
 

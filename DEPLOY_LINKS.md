@@ -5,24 +5,24 @@
 ### 📝 使用步骤
 
 1. **Fork 本项目**到您的 GitHub 账户
-2. **替换用户名**：将以下链接中的 `%3Cusername%3E` 替换为您的 GitHub 用户名
+2. **替换用户名**：将以下链接中的 `Alleyf` 替换为您的 GitHub 用户名
 3. **更新 README.md** 中的部署链接
 
 ### 🔗 链接替换示例
 
 **原链接**（需要替换）：
 ```
-https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F%3Cusername%3E%2FPhotoDesign
+https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAlleyf%2Fpg-design
 ```
 
 **替换后**（假设您的用户名是 `johndoe`）：
 ```
-https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjohndoe%2FPhotoDesign
+https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjohndoe%2Fpg-design
 ```
 
 ### 📋 需要更新的位置
 
-在 `README.md` 文件中，需要将以下位置的 `%3Cusername%3E` 替换为您的实际 GitHub 用户名：
+在 `README.md` 文件中，需要将以下位置的 `Alleyf` 替换为您的实际 GitHub 用户名：
 
 1. **顶部快速部署按钮**：
    - Vercel 部署链接
@@ -59,5 +59,5 @@ https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjohndoe%2
 
 1. 检查 GitHub 用户名拼写
 2. 确认仓库是公开的
-3. 验证仓库名称为 `PhotoDesign`
+3. 验证仓库名称为 `pg-design`
 4. 提交 Issue 寻求帮助
