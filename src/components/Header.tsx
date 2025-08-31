@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, ArrowLeft } from 'lucide-react';
 import { DataManager } from './DataManager';
 
@@ -9,6 +9,9 @@ interface HeaderProps {
 }
 
 export function Header({ onCreateProject, onBackToProjects, onDataChanged }: HeaderProps) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -25,11 +28,34 @@ export function Header({ onCreateProject, onBackToProjects, onDataChanged }: Hea
             )}
             <div className="flex items-center space-x-3">
               <div className="bg-amber-500 p-2 rounded-lg">
-                <img 
-                  src="/icon.png" 
-                  alt="PG Design Logo" 
-                  className="w-6 h-6 object-contain"
-                />
+                {!imageError ? (
+                  <img 
+                    src="/icon.png" 
+                    alt="PG Design Logo" 
+                    className="w-6 h-6 object-contain"
+                    onError={(e) => {
+                      console.error('PNG Logo failed to load, trying SVG fallback:', e);
+                      // 尝试SVG备用方案
+                      setImageError(true);
+                    }}
+                    onLoad={() => {
+                      console.log('PNG Logo loaded successfully');
+                      setImageLoaded(true);
+                    }}
+                  />
+                ) : (
+                  <img 
+                    src="/logo.svg" 
+                    alt="PG Design Logo" 
+                    className="w-6 h-6 object-contain"
+                    onError={() => {
+                      console.error('SVG Logo also failed to load');
+                    }}
+                    onLoad={() => {
+                      console.log('SVG Logo loaded successfully');
+                    }}
+                  />
+                )}
               </div>
               <div>
                 <h1 className="text-xl font-bold">PG Design</h1>
