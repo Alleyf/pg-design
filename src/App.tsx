@@ -103,7 +103,21 @@ function App() {
     setProjects(prev => prev.filter(p => p.id !== projectId));
     if (selectedProject?.id === projectId) {
       setSelectedProjectId(null);
+      // 添加延迟以确保状态更新
+      setTimeout(() => {
+        if (window.location.pathname !== '/') {
+          window.history.pushState({}, '', '/');
+        }
+      }, 0);
     }
+  };
+
+  const handleSelectProject = (project: Project) => {
+    setSelectedProjectId(project.id);
+  };
+
+  const handleImportProject = (projectsData: Project[]) => {
+    setProjects(projectsData);
   };
 
   // 处理数据变更（导入/清空后需要重新加载数据）
@@ -113,35 +127,28 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <Header 
-        onCreateProject={() => setIsCreateModalOpen(true)}
+    <div className="min-h-screen bg-gray-900 text-gray-100">
+      <Header
+        onCreateProject={handleCreateProject}
         onBackToProjects={selectedProject ? () => setSelectedProjectId(null) : undefined}
         onDataChanged={handleDataChanged}
+        onImportProject={handleImportProject}
       />
-      
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto p-4">
         {selectedProject ? (
-          <ProjectDetail 
+          <ProjectDetail
             project={selectedProject}
-            onUpdate={handleUpdateProject}
-            onDelete={handleDeleteProject}
+            onClose={() => setSelectedProjectId(null)}
+            onDelete={() => handleDeleteProject(selectedProject.id)}
           />
         ) : (
-          <ProjectList 
+          <ProjectList
             projects={projects}
-            onSelectProject={(project) => setSelectedProjectId(project.id)}
-            onCreateProject={() => setIsCreateModalOpen(true)}
+            onSelectProject={handleSelectProject}
+            onDeleteProject={handleDeleteProject} // 添加这个prop
           />
         )}
       </main>
-
-      {isCreateModalOpen && (
-        <CreateProjectModal
-          onClose={() => setIsCreateModalOpen(false)}
-          onSubmit={handleCreateProject}
-        />
-      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { Project } from '../types/project';
 interface ProjectListProps {
   projects: Project[];
   onSelectProject: (project: Project) => void;
-  onCreateProject: () => void;
+  onDeleteProject: (projectId: string) => void; // 添加这个属性
 }
 
 const projectTypeIcons = {
@@ -32,7 +32,7 @@ const statusLabels = {
   completed: '已完成',
 };
 
-export function ProjectList({ projects, onSelectProject, onCreateProject }: ProjectListProps) {
+export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProject, onDeleteProject }) => {
   if (projects.length === 0) {
     return (
       <div className="text-center py-16">
@@ -73,10 +73,11 @@ export function ProjectList({ projects, onSelectProject, onCreateProject }: Proj
           const totalBudget = (project.budget || 0) + project.team.reduce((sum, member) => sum + (member.rate || 0), 0);
           
           return (
-            <div
+            <div 
               key={project.id}
-              onClick={() => onSelectProject(project)}
               className="bg-gray-800 rounded-xl overflow-hidden hover:bg-gray-750 transition-all duration-200 cursor-pointer hover:scale-105 border border-gray-700 hover:border-gray-600"
+              onClick={() => onSelectProject(project)}
+              style={{ transition: 'all 0.3s ease' }}
             >
               {/* 封面图 */}
               {project.coverImage && (
@@ -86,23 +87,21 @@ export function ProjectList({ projects, onSelectProject, onCreateProject }: Proj
                     alt={project.title}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
-                  <div className="absolute top-3 left-3">
-                    <div className="bg-gray-900/80 backdrop-blur-sm p-2 rounded-lg">
-                      <IconComponent className="w-5 h-5 text-amber-400" />
-                    </div>
-                  </div>
-                  <div className="absolute top-3 right-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium text-white ${statusColors[project.status]} backdrop-blur-sm`}>
-                      {statusLabels[project.status]}
-                    </span>
-                  </div>
-                  {overdueTasks > 0 && (
-                    <div className="absolute bottom-3 right-3 flex items-center space-x-1 text-red-400 bg-gray-900/80 backdrop-blur-sm px-2 py-1 rounded">
-                      <AlertTriangle className="w-3 h-3" />
-                      <span className="text-xs">{overdueTasks}个逾期</span>
-                    </div>
-                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm(`确定要删除项目"${project.title}"吗？此操作不可恢复！`)) {
+                        onDeleteProject(project.id);
+                        alert(`项目 \"${project.title}\" 已成功删除`);
+                      }
+                    }}
+                    className="absolute top-2 right-2 p-1 bg-gray-900/80 hover:bg-red-900/80 rounded-full text-gray-400 hover:text-red-300 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+                    title="删除项目"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 </div>
               )}
               
