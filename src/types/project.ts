@@ -1,103 +1,85 @@
-export interface Project {
+// 项目基础类型
+export interface ProjectBase {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   type: 'portrait' | 'landscape' | 'product' | 'wedding' | 'event' | 'commercial' | 'other';
   status: 'planning' | 'scheduled' | 'in-progress' | 'completed';
-  shootDate?: Date;
-  location: string;
-  createdAt: Date;
-  updatedAt: Date;
-  coverImage?: string; // 项目封面图
-  
-  // 拍摄详情
-  concept: string;
-  mood: string;
-  equipment: Equipment[];
-  props: string[];
-  wardrobe: string[];
-  team: TeamMember[];
-  
-  // 灵感板
-  inspirationImages: InspirationImage[];
-  
-  // 任务清单
-  checklist: ChecklistItem[];
-  
-  // 预算
+  shoot_date?: Date;
+  location?: string;
   budget?: number;
-  expenses: Expense[];
-  notes: string;
-  
-  // 拍摄设置
-  shootingSettings: ShootingSettings;
-  
-  // 客户信息
-  client?: ClientInfo;
-}
-
-export interface Equipment {
-  id: string;
-  name: string;
-  type: 'camera' | 'lens' | 'lighting' | 'accessory';
-  isRequired: boolean;
-  brand?: string;
-  model?: string;
+  concept?: string;
+  mood?: string;
   notes?: string;
+  cover_image?: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
+// 团队成员类型
 export interface TeamMember {
   id: string;
   name: string;
-  role: string;
-  contact: string;
-  confirmed: boolean;
+  role?: string;
   rate?: number;
-  paymentStatus: 'pending' | 'paid' | 'not-applicable';
+  confirmed: boolean;
+  contact?: string;
 }
 
-export interface InspirationImage {
-  id: string;
-  url: string;
-  title: string;
-  description: string;
-  tags: string[];
-  category: 'pose' | 'lighting' | 'composition' | 'color' | 'mood' | 'other';
-}
-
+// 任务清单类型
 export interface ChecklistItem {
   id: string;
-  task: string;
+  description: string;
+  due_date?: Date;
   completed: boolean;
-  dueDate?: Date;
-  assignedTo?: string;
-  priority: 'low' | 'medium' | 'high';
-  category: 'equipment' | 'location' | 'team' | 'creative' | 'logistics' | 'other';
+  assigned_to?: string;
 }
 
+// 项目费用类型
 export interface Expense {
   id: string;
   description: string;
   amount: number;
   category: 'equipment' | 'location' | 'team' | 'props' | 'travel' | 'other';
   status: 'planned' | 'confirmed' | 'paid';
-  date?: Date;
+  date: Date;
 }
 
-export interface ShootingSettings {
-  duration: number; // 拍摄时长（小时）
-  startTime?: string;
-  endTime?: string;
-  weatherRequirement?: string;
-  backupPlan?: string;
-  specialRequirements: string[];
+// 灵感板类型
+export interface Inspiration {
+  id: string;
+  image_url: string;
+  notes?: string;
+  tags?: string[];
 }
 
-export interface ClientInfo {
+// 器材设备类型
+export interface Equipment {
+  id: string;
   name: string;
-  contact: string;
+  quantity?: number;
+  notes?: string;
+}
+
+// 客户类型
+export interface Client {
+  id: string;
+  name: string;
+  contact_person?: string;
+  email?: string;
+  phone?: string;
   company?: string;
-  requirements: string;
-  deliveryDate?: Date;
-  deliveryFormat: string[];
+  notes?: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+// 完整项目类型
+export interface Project extends ProjectBase {
+  team: TeamMember[];
+  checklist: ChecklistItem[];
+  expenses: Expense[];
+  inspiration_images: Inspiration[];
+  equipment: Equipment[];
+  clients: Client[];
 }

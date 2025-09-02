@@ -1,25 +1,15 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
-export default defineConfig(() => {
-  return {
-    plugins: [react()],
-    base: '/',
-    build: {
-      outDir: 'dist',
-      assetsDir: 'assets',
-      emptyOutDir: true,
-      manifest: true,
-      rollupOptions: {
-        output: {
-          assetFileNames: 'assets/[name].[hash][extname]',
-          entryFileNames: 'assets/[name].[hash].js'
-        }
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5175',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
-    },
-    optimizeDeps: {
-      exclude: ['lucide-react'],
-    },
-  };
-});
+    }
+  }
+})
