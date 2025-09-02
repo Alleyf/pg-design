@@ -1,0 +1,18 @@
+name: Deployment Status
+on:
+  workflow_run:
+    workflows: ["deploy"]
+    types: [completed]
+
+jobs:
+  check-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deployment status
+        run: |
+          if [[ "${{ github.event.workflow_run.conclusion }}" != "success" ]]; then
+            echo "Deployment failed! Check logs at ${{ github.event.workflow_run.html_url }}"
+            exit 1
+          else
+            echo "Deployment successful! View at https://alleyf.github.io/pg-design/"
+          fi
