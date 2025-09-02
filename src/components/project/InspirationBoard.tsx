@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, X, Tag, ExternalLink, Filter, Search } from 'lucide-react';
+import { Plus, X, Tag, ExternalLink, Filter, Search, Upload } from 'lucide-react';
 import { Project, InspirationImage } from '../../types/project';
 
 interface InspirationBoardProps {
@@ -163,15 +163,42 @@ export function InspirationBoard({ project, onUpdate }: InspirationBoardProps) {
         <div className="bg-gray-700 rounded-lg p-6">
           <h4 className="text-lg font-semibold mb-4">添加灵感图片</h4>
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">图片URL *</label>
-              <input
-                type="url"
-                value={newImage.url}
-                onChange={(e) => setNewImage(prev => ({ ...prev, url: e.target.value }))}
-                className="w-full bg-gray-600 border border-gray-500 rounded-lg px-4 py-3 text-white placeholder-gray-400"
-                placeholder="https://example.com/image.jpg"
-              />
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-300">图片来源 *</label>
+              <div className="flex items-center space-x-4">
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('image-upload')?.click()}
+                  className="flex items-center space-x-2 bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+                >
+                  <Upload className="w-4 h-4" />
+                  <span>上传本地图片</span>
+                </button>
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setNewImage(prev => ({ ...prev, url: event.target?.result as string }));
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="hidden"
+                />
+                <div className="text-xs text-gray-400">或</div>
+                <input
+                  type="url"
+                  value={newImage.url}
+                  onChange={(e) => setNewImage(prev => ({ ...prev, url: e.target.value }))}
+                  placeholder="输入图片URL"
+                  className="flex-1 bg-gray-600 border border-gray-500 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-sm"
+                />
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
