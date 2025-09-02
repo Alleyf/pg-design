@@ -16,7 +16,7 @@ export default defineConfig(({ command, mode }) => {
     if (isVercel) {
       base = '/'; // Vercel强制使用根路径
     } else if (isGitHubPages) {
-      base = '/pg-design/'; // GitHub Pages使用子路径
+      base = '/'; // 修改为根路径
     }
   }
   
@@ -25,6 +25,11 @@ export default defineConfig(({ command, mode }) => {
   return {
     plugins: [react()],
     base,
+    build: {
+      outDir: 'dist',
+      assetsDir: 'assets',
+      emptyOutDir: true
+    },
     optimizeDeps: {
       exclude: ['lucide-react'],
     },
