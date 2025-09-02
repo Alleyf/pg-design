@@ -27,6 +27,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          destination_dir: pg-design
           force_orphan: true
           keep_files: false
           cname: alleyf.github.io

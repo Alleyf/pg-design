@@ -14,9 +14,9 @@ export default defineConfig(({ command, mode }) => {
   
   if (command === 'build') {
     if (isVercel) {
-      base = '/'; // Vercel强制使用根路径
+      base = '/';
     } else if (isGitHubPages) {
-      base = '/'; // 修改为根路径
+      base = '/pg-design/'; // 恢复为子路径
     }
   }
   
@@ -28,7 +28,14 @@ export default defineConfig(({ command, mode }) => {
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
-      emptyOutDir: true
+      emptyOutDir: true,
+      manifest: true,
+      rollupOptions: {
+        output: {
+          assetFileNames: 'assets/[name].[hash][extname]',
+          entryFileNames: 'assets/[name].[hash].js'
+        }
+      }
     },
     optimizeDeps: {
       exclude: ['lucide-react'],
