@@ -29,7 +29,7 @@ export function InspirationBoard({ project, onUpdate }: InspirationBoardProps) {
   });
 
   const handleAddImage = () => {
-    if (!newImage.url || !newImage.title) return;
+    if (!newImage.url) return;
 
     const inspiration: InspirationImage = {
       id: Date.now().toString(),
@@ -202,13 +202,13 @@ export function InspirationBoard({ project, onUpdate }: InspirationBoardProps) {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">标题 *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">标题</label>
               <input
                 type="text"
                 value={newImage.title}
                 onChange={(e) => setNewImage(prev => ({ ...prev, title: e.target.value }))}
                 className="w-full bg-gray-600 border border-gray-500 rounded-lg px-4 py-3 text-white placeholder-gray-400"
-                placeholder="为这张图片起个名字"
+                placeholder="为这张图片起个名字（可选）"
               />
               </div>
               <div>
