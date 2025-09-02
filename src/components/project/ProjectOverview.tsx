@@ -1,6 +1,7 @@
-import React from 'react';
-import { Calendar, MapPin, Clock, DollarSign, Users, CheckCircle, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, MapPin, Clock, DollarSign, Users, CheckCircle, AlertTriangle, Edit } from 'lucide-react';
 import { Project } from '../../types/project';
+import { EditProjectModal } from './EditProjectModal';
 
 interface ProjectOverviewProps {
   project: Project;
@@ -9,14 +10,26 @@ interface ProjectOverviewProps {
 }
 
 export function ProjectOverview({ project, onUpdate, onDelete }: ProjectOverviewProps) {
-  const completedTasks = project.checklist.filter(task => task.completed).length;
-  const totalTasks = project.checklist.length;
-  const confirmedMembers = project.team.filter(member => member.confirmed).length;
-  const totalMembers = project.team.length;
-  const totalBudget = (project.budget || 0) + project.team.reduce((sum, member) => sum + (member.rate || 0), 0);
-  const overdueTasks = project.checklist.filter(task => 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const editModal = isEditModalOpen ? (
+    <EditProjectModal
+      project={project}
+      onClose={() => setIsEditModalOpen(false)}
+      onSave={(updatedProject) => {
+        onUpdate(updatedProject);
+        setIsEditModalOpen(false);
+      }}
+    />
+  ) : null;
+  const completedTasks = project.checklist?.filter(task => task.completed)?.length || 0;
+  const totalTasks = project.checklist?.length || 0;
+  const confirmedMembers = project.team?.filter(member => member.confirmed)?.length || 0;
+  const totalMembers = project.team?.length || 0;
+  const totalBudget = (project.budget || 0) + (project.team?.reduce((sum, member) => sum + (member.rate || 0), 0) || 0);
+  const overdueTasks = project.checklist?.filter(task => 
     task.dueDate && new Date() > task.dueDate && !task.completed
-  ).length;
+  )?.length || 0;
 
   const getStatusColor = (status: Project['status']) => {
     switch (status) {
@@ -36,12 +49,32 @@ export function ProjectOverview({ project, onUpdate, onDelete }: ProjectOverview
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      {isEditModalOpen && (
+        <EditProjectModal
+          project={project}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={(updatedProject) => {
+            onUpdate(updatedProject);
+            setIsEditModalOpen(false);
+          }}
+        />
+      )}
+      <div className="space-y-6">
       {/* 项目状态卡片 */}
       <div className="bg-gradient-to-r from-gray-700 to-gray-600 rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+            <div className="flex items-center space-x-2">
+              <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+              <button 
+                onClick={() => setIsEditModalOpen(true)}
+                className="text-gray-400 hover:text-amber-400 transition-colors"
+                title="编辑项目信息"
+              >
+                <Edit className="w-5 h-5" />
+              </button>
+            </div>
             <p className="text-gray-300">{project.description}</p>
           </div>
           <div className="text-right">
@@ -93,7 +126,7 @@ export function ProjectOverview({ project, onUpdate, onDelete }: ProjectOverview
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-gray-600 rounded-lg p-6 text-center">
           <div className="text-3xl font-bold text-amber-400 mb-2">
-            {project.inspirationImages.length}
+            {project.inspirationImages?.length || 0}
           </div>
           <div className="text-gray-300">灵感图片</div>
           <div className="text-xs text-gray-400 mt-1">收集的参考素材</div>
@@ -117,7 +150,7 @@ export function ProjectOverview({ project, onUpdate, onDelete }: ProjectOverview
         
         <div className="bg-gray-600 rounded-lg p-6 text-center">
           <div className="text-3xl font-bold text-purple-400 mb-2">
-            {project.equipment.length}
+            {project.equipment?.length || 0}
           </div>
           <div className="text-gray-300">器材设备</div>
           <div className="text-xs text-gray-400 mt-1">准备的设备</div>
@@ -259,7 +292,7 @@ export function ProjectOverview({ project, onUpdate, onDelete }: ProjectOverview
           <div className="flex items-center justify-between p-3 bg-gray-600 rounded-lg">
             <span className="text-gray-300">器材设备准备</span>
             <div className="flex items-center space-x-2">
-              {project.equipment.length > 0 ? (
+              {project.equipment?.length > 0 ? (
                 <CheckCircle className="w-5 h-5 text-green-400" />
               ) : (
                 <AlertTriangle className="w-5 h-5 text-yellow-400" />
@@ -270,9 +303,9 @@ export function ProjectOverview({ project, onUpdate, onDelete }: ProjectOverview
           <div className="flex items-center justify-between p-3 bg-gray-600 rounded-lg">
             <span className="text-gray-300">灵感素材收集</span>
             <div className="flex items-center space-x-2">
-              {project.inspirationImages.length >= 3 ? (
+              {project.inspirationImages?.length >= 3 ? (
                 <CheckCircle className="w-5 h-5 text-green-400" />
-              ) : project.inspirationImages.length > 0 ? (
+              ) : project.inspirationImages?.length > 0 ? (
                 <AlertTriangle className="w-5 h-5 text-yellow-400" />
               ) : (
                 <AlertTriangle className="w-5 h-5 text-red-400" />
@@ -281,6 +314,17 @@ export function ProjectOverview({ project, onUpdate, onDelete }: ProjectOverview
           </div>
         </div>
       </div>
-    </div>
+      </div>
+      {isEditModalOpen && (
+        <EditProjectModal
+          project={project}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={(updatedProject) => {
+            onUpdate(updatedProject);
+            setIsEditModalOpen(false);
+          }}
+        />
+      )}
+    </>
   );
 }

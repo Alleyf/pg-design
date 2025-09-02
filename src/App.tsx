@@ -129,17 +129,22 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <Header
-        onCreateProject={handleCreateProject}
+        onCreateProject={() => setIsCreateModalOpen(true)}
         onBackToProjects={selectedProject ? () => setSelectedProjectId(null) : undefined}
         onDataChanged={handleDataChanged}
-        onImportProject={handleImportProject}
       />
+      {isCreateModalOpen && (
+        <CreateProjectModal
+          onClose={() => setIsCreateModalOpen(false)}
+          onSubmit={handleCreateProject}
+        />
+      )}
       <main className="container mx-auto p-4">
         {selectedProject ? (
           <ProjectDetail
             project={selectedProject}
-            onClose={() => setSelectedProjectId(null)}
-            onDelete={() => handleDeleteProject(selectedProject.id)}
+            onUpdate={handleUpdateProject}
+            onDelete={(projectId) => handleDeleteProject(projectId)}
           />
         ) : (
           <ProjectList

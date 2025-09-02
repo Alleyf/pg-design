@@ -5,6 +5,7 @@ import { Project } from '../types/project';
 interface CreateProjectModalProps {
   onClose: () => void;
   onSubmit: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onCreate?: never; // 明确表示不使用这个属性
 }
 
 // 根据项目类型获取默认封面图
@@ -28,7 +29,7 @@ const getCoverImageOptions = (type: Project['type']): { url: string; title: stri
       { url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop&crop=face', title: '经典人像' },
       { url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=300&fit=crop&crop=face', title: '女性肖像' },
       { url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&crop=face', title: '男性肖像' },
-      { url: 'https://images.unsplash.com/photo-1494790108755-2616c10b46c5?w=400&h=300&fit=crop&crop=face', title: '时尚人像' }
+      { url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=300&fit=crop&crop=face', title: '时尚人像' }
     ],
     landscape: [
       { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', title: '山景风光' },
@@ -96,6 +97,7 @@ export function CreateProjectModal({ onClose, onSubmit }: CreateProjectModalProp
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Submitting project data:', formData);
     
     const projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'> = {
       title: formData.title,
@@ -278,6 +280,38 @@ export function CreateProjectModal({ onClose, onSubmit }: CreateProjectModalProp
                   </div>
                 )}
                 
+                {/* 本地文件上传 */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1">
+                    从本地选择图片
+                  </label>
+                  <div className="flex space-x-2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const imageUrl = URL.createObjectURL(file);
+                          setFormData(prev => ({ ...prev, coverImage: imageUrl }));
+                        }
+                      }}
+                      className="flex-1 bg-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white text-sm file:mr-4 file:py-1 file:px-3
+                      file:rounded-md file:border-0 file:text-sm file:font-medium
+                      file:bg-amber-500 file:text-gray-900 hover:file:bg-amber-400"
+                    />
+                    {formData.coverImage && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, coverImage: '' }))}
+                        className="bg-gray-600 hover:bg-gray-500 text-gray-300 px-3 py-2 rounded-lg transition-colors"
+                      >
+                        清除
+                      </button>
+                    )}
+                  </div>
+                </div>
+
                 {/* 自定义URL输入 */}
                 <div>
                   <label className="block text-xs font-medium text-gray-400 mb-1">
@@ -323,7 +357,11 @@ export function CreateProjectModal({ onClose, onSubmit }: CreateProjectModalProp
                         <img
                           src={option.url}
                           alt={option.title}
-                          className="w-full h-16 object-cover"
+                          className="w-full h-20 object-cover"
+                          onError={(e) => {
+                            console.error(`Failed to load image: ${option.url}`);
+                            e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available';
+                          }}
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <span className="text-white text-xs font-medium">{option.title}</span>
