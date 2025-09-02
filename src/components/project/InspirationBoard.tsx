@@ -199,6 +199,22 @@ export function InspirationBoard({ project, onUpdate }: InspirationBoardProps) {
                   className="flex-1 bg-gray-600 border border-gray-500 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-sm"
                 />
               </div>
+              {newImage.url && (
+                <div className="mt-2">
+                  <div className="text-xs text-gray-400 mb-1">图片预览：</div>
+                  <div className="w-full h-40 bg-gray-800 rounded-lg overflow-hidden border border-gray-600">
+                    <img 
+                      src={newImage.url} 
+                      alt="预览" 
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://images.pexels.com/photos/1382731/pexels-photo-1382731.jpeg';
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
