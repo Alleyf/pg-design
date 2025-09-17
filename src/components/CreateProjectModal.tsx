@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { X, Camera, Image } from 'lucide-react';
-import { Project } from '../types/project';
+import { ProjectUI, ProjectType } from '../types/project-ui';
 
 interface CreateProjectModalProps {
   onClose: () => void;
-  onSubmit: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onSubmit: (project: Omit<ProjectUI, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onCreate?: never; // 明确表示不使用这个属性
 }
 
 // 根据项目类型获取默认封面图
-const getDefaultCoverImage = (type: Project['type']): string => {
+const getDefaultCoverImage = (type: ProjectType): string => {
   const coverImages = {
     portrait: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop&crop=face',
     landscape: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
@@ -23,7 +23,7 @@ const getDefaultCoverImage = (type: Project['type']): string => {
 };
 
 // 封面图选项
-const getCoverImageOptions = (type: Project['type']): { url: string; title: string }[] => {
+const getCoverImageOptions = (type: ProjectType): { url: string; title: string }[] => {
   const options = {
     portrait: [
       { url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop&crop=face', title: '经典人像' },
@@ -85,7 +85,7 @@ export function CreateProjectModal({ onClose, onSubmit }: CreateProjectModalProp
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    type: 'portrait' as Project['type'],
+    type: 'portrait' as ProjectType,
     location: '',
     concept: '',
     mood: '',
@@ -97,9 +97,20 @@ export function CreateProjectModal({ onClose, onSubmit }: CreateProjectModalProp
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting project data:', formData);
+    // Basic validation
+    if (!formData.title.trim()) {
+      alert('项目名称为必填');
+      return;
+    }
+    if (formData.budget) {
+      const n = Number(formData.budget);
+      if (Number.isNaN(n) || n < 0) {
+        alert('预算必须是大于等于 0 的数字');
+        return;
+      }
+    }
     
-    const projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'> = {
+    const projectData: Omit<ProjectUI, 'id' | 'createdAt' | 'updatedAt'> = {
       title: formData.title,
       description: formData.description,
       type: formData.type,
@@ -183,7 +194,7 @@ export function CreateProjectModal({ onClose, onSubmit }: CreateProjectModalProp
                   <button
                     key={type.value}
                     type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, type: type.value as Project['type'] }))}
+                    onClick={() => setFormData(prev => ({ ...prev, type: type.value as ProjectType }))}
                     className={`flex items-center space-x-2 p-3 rounded-lg border transition-colors ${
                       formData.type === type.value
                         ? 'bg-amber-500 border-amber-500 text-gray-900'

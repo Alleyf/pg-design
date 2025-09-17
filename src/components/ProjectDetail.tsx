@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Project } from '../types/project';
+import { ProjectUI as Project } from '../types/project-ui';
 import { ProjectOverview } from './project/ProjectOverview';
 import { InspirationBoard } from './project/InspirationBoard';
 import { PlanningDetails } from './project/PlanningDetails';
@@ -32,19 +32,19 @@ export function ProjectDetail({ project, onUpdate, onDelete }: ProjectDetailProp
   const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
-        return <ProjectOverview project={project} onUpdate={onUpdate} onDelete={onDelete} />;
+        return <ProjectOverview project={project as any} onUpdate={onUpdate as any} onDelete={onDelete} />;
       case 'inspiration':
-        return <InspirationBoard project={project} onUpdate={onUpdate} />;
+        return <InspirationBoard project={project as any} onUpdate={onUpdate as any} />;
       case 'planning':
-        return <PlanningDetails project={project} onUpdate={onUpdate} />;
+        return <PlanningDetails project={project as any} onUpdate={onUpdate as any} />;
       case 'team':
-        return <TeamManager project={project} onUpdate={onUpdate} />;
+        return <TeamManager project={project as any} onUpdate={onUpdate as any} />;
       case 'checklist':
-        return <ChecklistManager project={project} onUpdate={onUpdate} />;
+        return <ChecklistManager project={project as any} onUpdate={onUpdate as any} />;
       case 'budget':
-        return <BudgetManager project={project} onUpdate={onUpdate} />;
+        return <BudgetManager project={project as any} onUpdate={onUpdate as any} />;
       case 'client':
-        return <ClientManager project={project} onUpdate={onUpdate} />;
+        return <ClientManager project={project as any} onUpdate={onUpdate as any} />;
       default:
         return null;
     }

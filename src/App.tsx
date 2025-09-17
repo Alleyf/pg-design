@@ -3,7 +3,7 @@ import { ProjectList } from './components/ProjectList';
 import { ProjectDetail } from './components/ProjectDetail';
 import { Header } from './components/Header';
 import { CreateProjectModal } from './components/CreateProjectModal';
-import { Project } from './types/project';
+import { ProjectUI as Project } from './types/project-ui';
 import { useLocalStorage } from './hooks/useLocalStorage';
 
 function App() {

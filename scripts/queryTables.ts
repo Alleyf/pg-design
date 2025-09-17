@@ -1,5 +1,5 @@
 // 查询Supabase数据库表数据
-import dotenv from 'dotenv'
+import * as dotenv from 'dotenv'
 dotenv.config()
 
 const { ProjectService } = require('../src/lib/database/project.js')

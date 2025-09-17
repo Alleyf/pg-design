@@ -1,20 +1,23 @@
 import { createClient } from '@supabase/supabase-js';
 import { Project, TeamMember, ChecklistItem, Expense, Inspiration, Equipment, Client, ProjectBase } from '../../types/project.js';
 
-import dotenv from 'dotenv';
-dotenv.config();
+// 浏览器环境使用import.meta.env，Node.js环境使用process.env
+const supabaseUrl = typeof window !== 'undefined' 
+  ? import.meta.env.VITE_SUPABASE_URL 
+  : process.env.VITE_SUPABASE_URL;
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseKey = typeof window !== 'undefined'
+  ? import.meta.env.VITE_SUPABASE_ANON_KEY
+  : process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Supabase URL and Anon Key must be provided in .env file');
+  throw new Error('Supabase URL and Anon Key must be provided in environment variables');
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 项目CRUD操作
-export const ProjectService = {
+const ProjectService = {
   // 获取所有项目
   async getAllProjects(): Promise<Project[]> {
     const { data, error } = await supabase
@@ -87,6 +90,17 @@ export const ProjectService = {
     
     if (error) throw error;
   }
+};
+
+// 导出所有服务
+export {
+  ProjectService,
+  TeamService,
+  ChecklistService,
+  ExpenseService,
+  InspirationService,
+  EquipmentService,
+  ClientService
 };
 
 // 团队成员操作

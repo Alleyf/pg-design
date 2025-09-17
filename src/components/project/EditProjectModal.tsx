@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { X, Image, Upload } from 'lucide-react';
-import { Project } from '../../types/project';
+import { ProjectUI } from '../../types/project-ui';
 
 interface EditProjectModalProps {
-  project: Project;
+  project: ProjectUI;
   onClose: () => void;
-  onSave: (updatedProject: Project) => void;
+  onSave: (updatedProject: ProjectUI) => void;
 }
 
 export function EditProjectModal({ project, onClose, onSave }: EditProjectModalProps) {

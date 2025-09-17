@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { ProjectService } from '../lib/database/project';
+import React from 'react';
 import { Calendar, MapPin, Users, Camera, Clock, DollarSign, AlertTriangle } from 'lucide-react';
-import { Project } from '../types/project';
+import { ProjectUI } from '../types/project-ui';
 
 interface ProjectListProps {
-  projects: Project[];
-  onSelectProject: (project: Project) => void;
+  projects: ProjectUI[];
+  onSelectProject: (project: ProjectUI) => void;
   onDeleteProject: (projectId: string) => void; // 添加这个属性
 }
 
@@ -33,22 +32,7 @@ const statusLabels = {
   completed: '已完成',
 };
 
-export const ProjectList: React.FC<ProjectListProps> = ({ onSelectProject, onDeleteProject }) => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch('/api/projects');
-        const data = await response.json();
-        setProjects(data);
-      } catch (error) {
-        console.error('获取项目列表失败:', error);
-      }
-    };
-    
-    fetchProjects();
-  }, []);
+export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProject, onDeleteProject }) => {
   if (projects.length === 0) {
     return (
       <div className="text-center py-16">
@@ -78,7 +62,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({ onSelectProject, onDel
           const completedTasks = project.checklist.filter(task => task.completed).length;
           const totalTasks = project.checklist.length;
           const overdueTasks = project.checklist.filter(task => 
-            task.due_date && new Date() > new Date(task.due_date) && !task.completed
+            task.dueDate && new Date() > new Date(task.dueDate) && !task.completed
           ).length;
           const totalBudget = (project.budget || 0) + project.team.reduce((sum, member) => sum + (member.rate || 0), 0);
           
@@ -90,10 +74,10 @@ export const ProjectList: React.FC<ProjectListProps> = ({ onSelectProject, onDel
               style={{ transition: 'all 0.3s ease' }}
             >
               {/* 封面图 */}
-              {project.cover_image && (
+              {project.coverImage && (
                 <div className="relative h-32 overflow-hidden">
                   <img 
-                    src={project.cover_image} 
+                    src={project.coverImage} 
                     alt={project.title}
                     className="w-full h-full object-cover"
                   />
@@ -116,7 +100,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({ onSelectProject, onDel
               )}
               
               {/* 无封面图时的顶部 */}
-              {!project.cover_image && (
+              {!project.coverImage && (
                 <div className="flex items-start justify-between p-4 pb-2">
                   <div className="bg-gray-700 p-3 rounded-lg">
                     <IconComponent className="w-6 h-6 text-amber-400" />
@@ -136,19 +120,19 @@ export const ProjectList: React.FC<ProjectListProps> = ({ onSelectProject, onDel
               )}
               
               {/* 内容区域 */}
-              <div className={project.cover_image ? 'p-4' : 'px-4 pb-4'}>
+              <div className={project.coverImage ? 'p-4' : 'px-4 pb-4'}>
                 <h3 className="text-xl font-semibold mb-2 line-clamp-2">{project.title}</h3>
                 <p className="text-gray-400 text-sm mb-4 line-clamp-2">{project.description}</p>
                 
                 <div className="space-y-2">
-                  {project.shoot_date && (
+                  {project.shootDate && (
                     <div className="flex items-center space-x-2 text-sm text-gray-300">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(project.shoot_date).toLocaleDateString('zh-CN')}</span>
-                      {project.shooting_duration && (
+                      <span>{new Date(project.shootDate).toLocaleDateString('zh-CN')}</span>
+                      {project.shootingSettings?.duration && (
                         <>
                           <Clock className="w-4 h-4 ml-2" />
-                          <span>{project.shooting_duration}h</span>
+                          <span>{project.shootingSettings.duration}h</span>
                         </>
                       )}
                     </div>
@@ -171,8 +155,8 @@ export const ProjectList: React.FC<ProjectListProps> = ({ onSelectProject, onDel
                 
                 <div className="mt-4 pt-4 border-t border-gray-700">
                   <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-                    <span>更新于 {new Date(project.updated_at).toLocaleDateString('zh-CN')}</span>
-                    <span>{project.inspiration_images?.length || 0} 张灵感图</span>
+                    <span>更新于 {new Date(project.updatedAt).toLocaleDateString('zh-CN')}</span>
+                    <span>{project.inspirationImages?.length || 0} 张灵感图</span>
                   </div>
                   {totalTasks > 0 && (
                     <div className="flex items-center justify-between text-xs">

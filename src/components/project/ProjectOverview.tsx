@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, MapPin, Clock, DollarSign, Users, CheckCircle, AlertTriangle, Edit } from 'lucide-react';
-import { Project } from '../../types/project';
+import { ProjectUI as Project } from '../../types/project-ui';
 import { EditProjectModal } from './EditProjectModal';
 
 interface ProjectOverviewProps {
