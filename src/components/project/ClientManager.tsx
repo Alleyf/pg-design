@@ -20,11 +20,22 @@ export function ClientManager({ project, onUpdate }: ClientManagerProps) {
   );
 
   const handleSave = () => {
-    if (!clientData.name || !clientData.contact) return;
+    if (!clientData.name || !clientData.name.trim()) {
+      alert('请填写客户姓名');
+      return;
+    }
+    if (!clientData.contact || !clientData.contact.trim()) {
+      alert('请填写联系方式');
+      return;
+    }
 
     onUpdate({
       ...project,
-      client: clientData,
+      client: {
+        ...clientData,
+        name: clientData.name.trim(),
+        contact: clientData.contact.trim(),
+      },
     });
     setIsEditing(false);
   };

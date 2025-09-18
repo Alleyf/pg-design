@@ -132,6 +132,32 @@ function App() {
         onCreateProject={() => setIsCreateModalOpen(true)}
         onBackToProjects={selectedProject ? () => setSelectedProjectId(null) : undefined}
         onDataChanged={handleDataChanged}
+        onShareAll={async () => {
+          try {
+            const text = JSON.stringify(projects, null, 2);
+            const shareData: ShareData = {
+              title: 'PG Design 项目列表',
+              text,
+            };
+            if (navigator.share) {
+              await navigator.share(shareData);
+            } else if (navigator.clipboard) {
+              await navigator.clipboard.writeText(text);
+              alert('已复制所有项目到剪贴板');
+            } else {
+              const blob = new Blob([text], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'projects.json';
+              a.click();
+              URL.revokeObjectURL(url);
+            }
+          } catch (e) {
+            console.error(e);
+            alert('分享失败，请重试');
+          }
+        }}
       />
       {isCreateModalOpen && (
         <CreateProjectModal
@@ -151,6 +177,7 @@ function App() {
             projects={projects}
             onSelectProject={handleSelectProject}
             onDeleteProject={handleDeleteProject} // 添加这个prop
+            onCreateProject={() => setIsCreateModalOpen(true)}
           />
         )}
       </main>

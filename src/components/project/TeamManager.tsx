@@ -46,12 +46,29 @@ export function TeamManager({ project, onUpdate }: TeamManagerProps) {
 
   const handleAddMember = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!newMember.name || !newMember.name.trim()) {
+      alert('请填写成员姓名');
+      return;
+    }
+    if (!newMember.role || !newMember.role.trim()) {
+      alert('请选择成员角色');
+      return;
+    }
+    if (!newMember.contact || !newMember.contact.trim()) {
+      alert('请填写联系方式');
+      return;
+    }
+    if (newMember.rate !== undefined && newMember.rate < 0) {
+      alert('费用必须大于等于 0');
+      return;
+    }
+
     if (newMember.name && newMember.role && newMember.contact) {
       const member: TeamMember = {
         id: Date.now().toString(),
-        name: newMember.name,
-        role: newMember.role,
-        contact: newMember.contact,
+        name: newMember.name.trim(),
+        role: newMember.role.trim(),
+        contact: newMember.contact.trim(),
         confirmed: newMember.confirmed || false,
         rate: newMember.rate || 0,
         paymentStatus: newMember.paymentStatus || 'not-applicable'
@@ -190,10 +207,13 @@ export function TeamManager({ project, onUpdate }: TeamManagerProps) {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">费用</label>
-                <input
+              <input
                   type="number"
-                  value={newMember.rate || 0}
-                  onChange={(e) => setNewMember(prev => ({ ...prev, rate: parseInt(e.target.value) || 0 }))}
+                value={newMember.rate || 0}
+                onChange={(e) => {
+                  const n = parseFloat(e.target.value);
+                  setNewMember(prev => ({ ...prev, rate: Number.isFinite(n) && n >= 0 ? n : 0 }));
+                }}
                   className="w-full bg-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   placeholder="0"
                 />

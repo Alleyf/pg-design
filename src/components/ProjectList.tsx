@@ -6,6 +6,7 @@ interface ProjectListProps {
   projects: Project[];
   onSelectProject: (project: Project) => void;
   onDeleteProject: (projectId: string) => void; // 添加这个属性
+  onCreateProject: () => void;
 }
 
 const projectTypeIcons = {
@@ -32,7 +33,7 @@ const statusLabels = {
   completed: '已完成',
 };
 
-export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProject, onDeleteProject }) => {
+export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProject, onDeleteProject, onCreateProject }) => {
   if (projects.length === 0) {
     return (
       <div className="text-center py-16">
@@ -100,6 +101,29 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  {/* 分享单个项目 */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const summary = `${project.title}（${project.type}）\n时间：${project.shootDate ? project.shootDate.toLocaleDateString('zh-CN') : '待定'}\n地点：${project.location || '待定'}\n团队：${project.team.length} 人\n预算：${project.budget ?? 0}`;
+                      const text = summary + '\n\n' + JSON.stringify(project, null, 2);
+                      const shareData: ShareData = { title: project.title, text };
+                      if (navigator.share) {
+                        navigator.share(shareData).catch(() => {});
+                      } else if (navigator.clipboard) {
+                        navigator.clipboard.writeText(text).then(() => alert('已复制项目信息')).catch(() => {});
+                      }
+                    }}
+                    className="absolute top-2 right-10 p-1 bg-gray-900/80 hover:bg-gray-800 rounded-full text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    title="分享项目"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 12v-2a4 4 0 0 1 4-4h1"/>
+                      <path d="M20 12v2a4 4 0 0 1-4 4h-1"/>
+                      <polyline points="16 6 21 6 21 11"/>
+                      <polyline points="8 18 3 18 3 13"/>
                     </svg>
                   </button>
                 </div>

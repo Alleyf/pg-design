@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Plus, ArrowLeft } from 'lucide-react';
+import { Plus, ArrowLeft, Share2 } from 'lucide-react';
 import { DataManager } from './DataManager';
 
 interface HeaderProps {
   onCreateProject: () => void;
   onBackToProjects?: () => void;
   onDataChanged?: () => void;
+  onShareAll?: () => void;
 }
 
-export function Header({ onCreateProject, onBackToProjects, onDataChanged }: HeaderProps) {
+export function Header({ onCreateProject, onBackToProjects, onDataChanged, onShareAll }: HeaderProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -69,6 +70,16 @@ export function Header({ onCreateProject, onBackToProjects, onDataChanged }: Hea
               onDataImported={onDataChanged}
               onDataCleared={onDataChanged}
             />
+            {onShareAll && (
+              <button
+                onClick={onShareAll}
+                className="flex items-center space-x-2 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+                title="分享所有项目"
+              >
+                <Share2 className="w-5 h-5" />
+                <span>分享全部</span>
+              </button>
+            )}
             <button
               onClick={onCreateProject}
               className="flex items-center space-x-2 bg-amber-500 text-gray-900 px-4 py-2 rounded-lg hover:bg-amber-400 transition-colors font-medium"

@@ -26,12 +26,24 @@ export function BudgetManager({ project, onUpdate }: BudgetManagerProps) {
   });
 
   const handleAddExpense = () => {
-    if (!newExpense.description || !newExpense.amount) return;
+    if (!newExpense.description.trim()) {
+      alert('请填写费用描述');
+      return;
+    }
+    if (newExpense.amount === '') {
+      alert('请填写金额');
+      return;
+    }
+    const amountNum = parseFloat(newExpense.amount as unknown as string);
+    if (Number.isNaN(amountNum) || amountNum < 0) {
+      alert('金额必须是大于等于 0 的数字');
+      return;
+    }
 
     const expense: Expense = {
       id: Date.now().toString(),
-      description: newExpense.description,
-      amount: parseFloat(newExpense.amount),
+      description: newExpense.description.trim(),
+      amount: amountNum,
       category: newExpense.category,
       status: newExpense.status,
       date: new Date(),
