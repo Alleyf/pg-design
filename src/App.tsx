@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ProjectList } from './components/ProjectList';
 import { ProjectDetail } from './components/ProjectDetail';
 import { Header } from './components/Header';
 import { CreateProjectModal } from './components/CreateProjectModal';
+import { LoginModal } from './components/auth/LoginModal';
+import { RegisterModal } from './components/auth/RegisterModal';
+import { UserProfile } from './components/auth/UserProfile';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Project } from './types/project';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { StorageManager } from './utils/storageManager';
 
-function App() {
+function AppContent() {
+  const { isAuthenticated } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+
   // 示例项目数据
   const sampleProjects: Project[] = [
     {
@@ -75,6 +85,16 @@ function App() {
   const [selectedProjectId, setSelectedProjectId] = useLocalStorage<string | null>('photodesign_selected_project', null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
+  // 应用启动时执行数据迁移
+  useEffect(() => {
+    const migrationResult = StorageManager.migrateData();
+    if (!migrationResult.success) {
+      console.warn('数据迁移失败:', migrationResult.message);
+    } else if (migrationResult.message !== '数据已是最新版本，无需迁移') {
+      console.log('数据迁移成功:', migrationResult.message);
+    }
+  }, []);
+
   // 根据 ID 查找选中的项目
   const selectedProject = selectedProjectId ? projects.find(p => p.id === selectedProjectId) || null : null;
 
@@ -100,7 +120,17 @@ function App() {
   };
 
   const handleDeleteProject = (projectId: string) => {
-    setProjects(prev => prev.filter(p => p.id !== projectId));
+    console.log('handleDeleteProject 被调用，项目ID:', projectId);
+    console.log('删除前项目数量:', projects.length);
+    console.log('当前项目列表:', projects.map(p => ({ id: p.id, title: p.title })));
+    
+    setProjects(prev => {
+      const filtered = prev.filter(p => p.id !== projectId);
+      console.log('删除后项目数量:', filtered.length);
+      console.log('删除后项目列表:', filtered.map(p => ({ id: p.id, title: p.title })));
+      return filtered;
+    });
+    
     if (selectedProject?.id === projectId) {
       setSelectedProjectId(null);
       // 添加延迟以确保状态更新
@@ -126,12 +156,62 @@ function App() {
     window.location.reload();
   };
 
+  // 如果未登录，显示登录界面
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-gray-100 flex items-center justify-center">
+        <div className="text-center space-y-6">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold text-amber-500">PG Design</h1>
+            <p className="text-gray-400">专业的摄影项目管理系统</p>
+          </div>
+          
+          <div className="space-y-4">
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text-white py-3 px-6 rounded-lg font-medium transition-colors"
+            >
+              登录
+            </button>
+            <button
+              onClick={() => setShowRegisterModal(true)}
+              className="w-full max-w-xs bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-medium transition-colors"
+            >
+              注册
+            </button>
+          </div>
+        </div>
+
+        {showLoginModal && (
+          <LoginModal
+            onClose={() => setShowLoginModal(false)}
+            onSwitchToRegister={() => {
+              setShowLoginModal(false);
+              setShowRegisterModal(true);
+            }}
+          />
+        )}
+
+        {showRegisterModal && (
+          <RegisterModal
+            onClose={() => setShowRegisterModal(false)}
+            onSwitchToLogin={() => {
+              setShowRegisterModal(false);
+              setShowLoginModal(true);
+            }}
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <Header
         onCreateProject={() => setIsCreateModalOpen(true)}
         onBackToProjects={selectedProject ? () => setSelectedProjectId(null) : undefined}
         onDataChanged={handleDataChanged}
+        onUserProfile={() => setShowUserProfile(true)}
         onShareAll={async () => {
           try {
             const text = JSON.stringify(projects, null, 2);
@@ -165,6 +245,11 @@ function App() {
           onSubmit={handleCreateProject}
         />
       )}
+      {showUserProfile && (
+        <UserProfile
+          onClose={() => setShowUserProfile(false)}
+        />
+      )}
       <main className="container mx-auto p-4">
         {selectedProject ? (
           <ProjectDetail
@@ -182,6 +267,14 @@ function App() {
         )}
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

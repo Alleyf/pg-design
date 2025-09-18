@@ -29,6 +29,11 @@ export class StorageManager {
     try {
       const data = JSON.parse(jsonData);
       
+      // 检查版本兼容性
+      if (data.version && data.version !== '1.0.0') {
+        console.warn(`数据版本 ${data.version} 可能与当前版本不兼容`);
+      }
+      
       // 验证数据结构
       if (!data.projects || !Array.isArray(data.projects)) {
         return { success: false, message: '数据格式无效：缺少项目数组' };
@@ -132,6 +137,73 @@ export class StorageManager {
       formattedTotalSize: this.formatBytes(totalSize),
       formattedProjectsSize: this.formatBytes(projectsSize)
     };
+  }
+
+  /**
+   * 数据迁移：从旧版本升级到新版本
+   */
+  static migrateData(): { success: boolean; message: string } {
+    try {
+      const projects = this.getProjects();
+      let migratedCount = 0;
+      
+      // 检查是否需要迁移
+      const needsMigration = projects.some(project => {
+        // 检查是否有旧版本字段需要迁移
+        return !project.updatedAt || 
+               (project.checklist && project.checklist.some(item => typeof item.dueDate === 'string'));
+      });
+      
+      if (!needsMigration) {
+        return { success: true, message: '数据已是最新版本，无需迁移' };
+      }
+      
+      // 执行迁移
+      const migratedProjects = projects.map(project => {
+        const migrated = { ...project };
+        
+        // 确保 updatedAt 存在
+        if (!migrated.updatedAt) {
+          migrated.updatedAt = migrated.createdAt || new Date();
+        }
+        
+        // 迁移 checklist 中的日期字段
+        if (migrated.checklist) {
+          migrated.checklist = migrated.checklist.map(item => ({
+            ...item,
+            dueDate: item.dueDate && typeof item.dueDate === 'string' 
+              ? new Date(item.dueDate) 
+              : item.dueDate
+          }));
+        }
+        
+        // 迁移 expenses 中的日期字段
+        if (migrated.expenses) {
+          migrated.expenses = migrated.expenses.map(expense => ({
+            ...expense,
+            date: expense.date && typeof expense.date === 'string' 
+              ? new Date(expense.date) 
+              : expense.date
+          }));
+        }
+        
+        migratedCount++;
+        return migrated;
+      });
+      
+      // 保存迁移后的数据
+      localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(migratedProjects));
+      
+      return { 
+        success: true, 
+        message: `数据迁移完成，共迁移 ${migratedCount} 个项目` 
+      };
+    } catch (error) {
+      return { 
+        success: false, 
+        message: `数据迁移失败：${error instanceof Error ? error.message : '未知错误'}` 
+      };
+    }
   }
 
   /**

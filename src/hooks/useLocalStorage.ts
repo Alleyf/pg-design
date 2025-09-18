@@ -38,15 +38,24 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   // 返回一个被包装的 setValue 函数，同时更新本地状态和 localStorage
   const setValue = (value: T | ((val: T) => T)) => {
     try {
+      console.log(`useLocalStorage setValue called for key "${key}"`);
+      console.log('Current storedValue:', storedValue);
+      console.log('New value:', value);
+      
       // 允许 value 是一个函数，这样可以基于当前值进行更新
       const valueToStore = value instanceof Function ? value(storedValue) : value;
+      console.log('Value to store:', valueToStore);
       
       // 保存状态
       setStoredValue(valueToStore);
+      console.log('setStoredValue called');
       
       // 保存到 localStorage
       if (typeof window !== 'undefined') {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        const jsonString = JSON.stringify(valueToStore);
+        console.log('Saving to localStorage:', jsonString);
+        window.localStorage.setItem(key, jsonString);
+        console.log('localStorage updated');
       }
     } catch (error) {
       console.error(`Error setting localStorage key "${key}":`, error);
@@ -56,7 +65,8 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   // 监听其他标签页中对同一 key 的修改
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === key && e.newValue !== null) {
+      // 只监听其他标签页的修改，忽略当前标签页的修改
+      if (e.key === key && e.newValue !== null && e.storageArea === localStorage) {
         try {
           const newValue = JSON.parse(e.newValue, (key, value) => {
             if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
@@ -71,8 +81,9 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    // 暂时禁用 storage 事件监听器来测试删除功能
+    // window.addEventListener('storage', handleStorageChange);
+    // return () => window.removeEventListener('storage', handleStorageChange);
   }, [key]);
 
   return [storedValue, setValue] as const;

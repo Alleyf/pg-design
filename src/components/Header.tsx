@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { Plus, ArrowLeft, Share2 } from 'lucide-react';
+import { Plus, ArrowLeft, Share2, User } from 'lucide-react';
 import { DataManager } from './DataManager';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
   onCreateProject: () => void;
   onBackToProjects?: () => void;
   onDataChanged?: () => void;
   onShareAll?: () => void;
+  onUserProfile?: () => void;
 }
 
-export function Header({ onCreateProject, onBackToProjects, onDataChanged, onShareAll }: HeaderProps) {
+export function Header({ onCreateProject, onBackToProjects, onDataChanged, onShareAll, onUserProfile }: HeaderProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const { user } = useAuth();
 
   return (
     <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
@@ -78,6 +81,16 @@ export function Header({ onCreateProject, onBackToProjects, onDataChanged, onSha
               >
                 <Share2 className="w-5 h-5" />
                 <span>分享全部</span>
+              </button>
+            )}
+            {onUserProfile && user && (
+              <button
+                onClick={onUserProfile}
+                className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                title="个人资料"
+              >
+                <User className="w-5 h-5" />
+                <span>{user.username}</span>
               </button>
             )}
             <button
